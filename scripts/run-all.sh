@@ -88,7 +88,7 @@ docker logs "$APP_CONTAINER" \
 } | tee "$EVIDENCE_DIR/13-host-read-new-file.txt"
 
 docker ps -a --filter "name=$APP_CONTAINER" \
-  --format 'NAMES\tSTATUS\tIMAGE' \
+  --format 'table {{.Names}}\t{{.Status}}\t{{.Image}}' \
   | tee "$EVIDENCE_DIR/14-container-status.txt"
 
 docker rm -f "$BASE_CONTAINER" "$APP_CONTAINER" \
@@ -126,7 +126,7 @@ else
   mv "$EVIDENCE_DIR/21-volume-absent-check.tmp" "$EVIDENCE_DIR/21-volume-absent-check.txt"
 fi
 
-docker ps -a --format 'NAMES\tSTATUS\tIMAGE' \
+docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Image}}' \
   | tee "$EVIDENCE_DIR/22-final-containers.txt"
 
 cat > "$EVIDENCE_DIR/resumo.txt" <<'SUMMARY'
