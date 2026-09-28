@@ -1,0 +1,36 @@
+name: Prática 05 Volumes no Docker
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  executar-pratica:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Obter o projeto
+        uses: actions/checkout@v4
+
+      - name: Executar as três ações do roteiro
+        run: |
+          chmod +x script.sh scripts/run-all.sh
+          ./scripts/run-all.sh
+
+      - name: Publicar o resumo da execução
+        if: always()
+        run: |
+          if [ -f evidencias/resumo.txt ]; then
+            cat evidencias/resumo.txt >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Salvar as evidências
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-pratica-05
+          path: evidencias/
+          if-no-files-found: error
+          retention-days: 30
